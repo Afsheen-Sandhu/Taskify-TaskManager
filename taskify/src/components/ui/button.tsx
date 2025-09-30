@@ -6,12 +6,12 @@ type Variant = "default" | "secondary" | "destructive" | "ghost" | "outline" | "
 type Size = "sm" | "md" | "lg" | "icon";
 
 const variantToClasses: Record<Variant, string> = {
-  default: "bg-orange-600 text-white hover:bg-orange-700",
-  secondary: "bg-gray-800 text-gray-100 hover:bg-gray-700",
-  destructive: "bg-red-600 text-white hover:bg-red-700",
-  ghost: "bg-transparent text-gray-900 hover:bg-gray-100",
-  outline: "border border-gray-300 text-gray-900 hover:bg-gray-50",
-  link: "text-orange-600 underline-offset-4 hover:underline",
+  default: "bg-primary text-primary-foreground hover:opacity-90",
+  secondary: "bg-secondary text-secondary-foreground hover:opacity-90",
+  destructive: "bg-destructive text-white hover:opacity-90",
+  ghost: "bg-transparent text-foreground hover:bg-muted",
+  outline: "border border-border text-foreground hover:bg-muted",
+  link: "text-primary underline-offset-4 hover:underline",
 };
 
 const sizeToClasses: Record<Size, string> = {

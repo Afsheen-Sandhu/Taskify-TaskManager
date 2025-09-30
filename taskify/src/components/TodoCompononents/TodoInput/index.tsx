@@ -1,32 +1,67 @@
-import React from 'react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-
+import React from "react";
+import toast from "react-hot-toast";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 interface TodoInputProps {
   addTodo: (todo: string) => void;
   input: string;
   setInput: (input: string) => void;
+  editMode?: boolean;
+  priority?: 'low' | 'medium' | 'high' | null;
+  setPriority?: (p: 'low' | 'medium' | 'high' | null) => void;
 }
-export const TodoInput = ({ addTodo, input, setInput }: TodoInputProps) => {
-
+export const TodoInput = ({
+  addTodo,
+  input,
+  setInput,
+  editMode = false,
+  priority = null,
+  setPriority,
+}: TodoInputProps) => {
   const handleAddTodo = () => {
-    if (input.trim() === '') return;
-    addTodo(input);
-    setInput('');
+    if (input.trim() === "") return;
+    if (!priority) {
+      toast.error("Please set Priority");
+      return;
+    }
+    // @ts-expect-error: addTodo in parent accepts optional priority; keep back-compat
+    addTodo(input, priority);
+    if (!editMode) {
+      setInput("");
+      setPriority && setPriority(null);
+    }
+    
   };
   return (
-    <header className="w-full flex items-center gap-3 p-4 border-b border-gray-800 bg-gray-900">
+    <div className="w-full justify-center flex items-center gap-3 p-4 border-b border-base-200 bg-base-100 relative">
       <Input
+      
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder="Enter your task"
-        className="flex-1 border-gray-700 bg-gray-800 text-gray-100 placeholder-gray-400"
+        className="flex w-5xl border-base-200 bg-base-200 text-base-content placeholder-neutral-content "
       />
-      <Button onClick={handleAddTodo} >
-        Add
+      <Select key={priority ?? "unset"} value={priority ?? undefined} onValueChange={(v) => setPriority && setPriority(v as 'low' | 'medium' | 'high')}>
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder="Set Priority" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="low">Low</SelectItem>
+          <SelectItem value="medium">Medium</SelectItem>
+          <SelectItem value="high">High</SelectItem>
+        </SelectContent>
+      </Select>
+
+      <Button size="lg" className="px-10" onClick={handleAddTodo}>
+        {editMode ? "Update" : "Add"}
       </Button>
-    </header>
+    </div>
   );
 };
-
-

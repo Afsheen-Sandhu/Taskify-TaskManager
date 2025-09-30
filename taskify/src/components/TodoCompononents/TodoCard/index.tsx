@@ -1,27 +1,67 @@
-import React from 'react';
+import Button from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import React, { useState } from "react";
+
 interface TodoCardProps {
   children: React.ReactNode;
   todoIndex: number;
   deleteTodo: (index: number) => void;
   editTodo: (index: number) => void;
-
+  priority?: 'low' | 'medium' | 'high';
 }
-export const TodoCard = ({ children, todoIndex, deleteTodo, editTodo } : TodoCardProps) => {
+
+export const TodoCard = ({
+  children,
+  todoIndex,
+  deleteTodo,
+  editTodo,
+  priority,
+}: TodoCardProps) => {
+  const [isChecked, setIsChecked] = useState(false);
+
   return (
-    <li className="flex items-center justify-between rounded-lg border border-gray-800 bg-gray-900 px-4 py-3 shadow-sm hover:shadow transition-shadow">
-      <div className="text-sm text-gray-100">
-        {children}
+    <li className="flex items-center justify-between rounded-lg border border-base-200 bg-base-100 px-4 py-3 shadow-sm hover:shadow transition-shadow">
+      <div className="flex items-center gap-3">
+        <Checkbox 
+          checked={isChecked} 
+          onCheckedChange={(checked) => setIsChecked(checked as boolean)}
+          className="h-5 w-5 rounded border-neutral-content data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+        />
+        <div className={`flex items-center gap-2 text-sm text-base-content ${isChecked ? 'line-through opacity-70' : ''}`}>
+          {children}
+          {priority && (
+            <Badge
+              variant={priority === 'high' ? 'destructive' : priority === 'medium' ? 'secondary' : 'default'}
+              className={
+                priority === 'high'
+                  ? 'bg-red-600 text-white'
+                  : priority === 'low'
+                  ? 'bg-emerald-600 text-white'
+                  : undefined
+              }
+            >
+              {priority}
+            </Badge>
+          )}
+        </div>
       </div>
       <div className="flex items-center gap-2">
-        <button onClick={() => editTodo(todoIndex)} className="inline-flex h-9 w-9 items-center justify-center rounded-md text-gray-300 hover:text-orange-400 hover:bg-gray-800">
+        <Button
+          variant="ghost"
+          onClick={() => editTodo(todoIndex)}
+          className="inline-flex h-9 w-9 items-center justify-center rounded-md text-neutral-content hover:text-primary hover:bg-base-200"
+        >
           <i className="fa-solid fa-pen-to-square"></i>
-        </button>
-        <button className="inline-flex h-9 w-9 items-center justify-center rounded-md text-gray-300 hover:text-red-400 hover:bg-gray-800" onClick={() => deleteTodo(todoIndex)}>
+        </Button>
+        <Button
+          variant="ghost"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-md text-neutral-content hover:text-error hover:bg-base-200"
+          onClick={() => deleteTodo(todoIndex)}
+        >
           <i className="fa-solid fa-trash-can"></i>
-        </button>
+        </Button>
       </div>
     </li>
   );
 };
-
-

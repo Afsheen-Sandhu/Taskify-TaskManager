@@ -5,6 +5,7 @@ import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import Topbar from "@/components/Topbar";
 import {Todo} from "@/components/Todo";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -50,12 +51,13 @@ export default function RootLayout({
       <body
         className={`${appFont.className} ${geistSans.variable} ${geistMono.variable} ${appFont.variable} antialiased flex `}
       >
-        <Sidebar />
+        {/* <Sidebar /> */}
         <div className="flex-1 flex flex-col">
-          <Topbar />
+          {/* <Topbar /> */}
           <Todo />
           {children}
         </div>
+        <Toaster position="top-center" />
       </body>
     </html>
   );
