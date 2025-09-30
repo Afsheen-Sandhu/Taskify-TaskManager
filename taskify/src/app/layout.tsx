@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
+import Sidebar from "@/components/Sidebar";
+import Topbar from "@/components/Topbar";
+import {Todo} from "@/components/Todo";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -10,6 +14,12 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const appFont = localFont({
+  src: "../fonts/Handlee-Regular.ttf",
+  variable: "--font-app",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -23,11 +33,29 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+          integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+          crossOrigin="anonymous"
+          referrerPolicy="no-referrer"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0"
+          rel="stylesheet"
+        />
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${appFont.className} ${geistSans.variable} ${geistMono.variable} ${appFont.variable} antialiased flex `}
       >
-        {children}
+        <Sidebar />
+        <div className="flex-1 flex flex-col">
+          <Topbar />
+          <Todo />
+          {children}
+        </div>
       </body>
     </html>
   );
