@@ -2,9 +2,9 @@ import Button from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import React, { useState } from "react";
+import { cn } from "@/lib/utils";
 
-interface TodoCardProps {
-  children: React.ReactNode;
+interface TodoCardProps extends React.ComponentPropsWithoutRef<"li"> {
   todoIndex: number;
   deleteTodo: (index: number) => void;
   editTodo: (index: number) => void;
@@ -17,27 +17,45 @@ export const TodoCard = ({
   deleteTodo,
   editTodo,
   priority,
+  className,
+  ...props
 }: TodoCardProps) => {
   const [isChecked, setIsChecked] = useState(false);
 
   return (
-    <li className="flex items-center justify-between rounded-lg border border-base-200 bg-base-100 px-4 py-3 shadow-sm hover:shadow transition-shadow">
+    <li
+      className={cn(
+        "flex items-center justify-between rounded-lg border-2 border-purple-700 bg-base-100 px-4 py-3 shadow-sm hover:shadow transition-shadow",
+        className
+      )}
+      {...props}
+    >
       <div className="flex items-center gap-3">
-        <Checkbox 
-          checked={isChecked} 
+        <Checkbox
+          checked={isChecked}
           onCheckedChange={(checked) => setIsChecked(checked as boolean)}
           className="h-5 w-5 rounded border-neutral-content data-[state=checked]:bg-primary data-[state=checked]:border-primary"
         />
-        <div className={`flex items-center gap-2 text-sm text-base-content ${isChecked ? 'line-through opacity-70' : ''}`}>
+        <div
+          className={`flex items-center gap-2 text-sm text-base-content ${
+            isChecked ? "line-through opacity-70" : ""
+          }`}
+        >
           {children}
           {priority && (
             <Badge
-              variant={priority === 'high' ? 'destructive' : priority === 'medium' ? 'secondary' : 'default'}
+              variant={
+                priority === "high"
+                  ? "destructive"
+                  : priority === "medium"
+                  ? "secondary"
+                  : "default"
+              }
               className={
-                priority === 'high'
-                  ? 'bg-red-600 text-white'
-                  : priority === 'low'
-                  ? 'bg-emerald-600 text-white'
+                priority === "high"
+                  ? "bg-red-600 text-white"
+                  : priority === "low"
+                  ? "bg-emerald-600 text-white"
                   : undefined
               }
             >

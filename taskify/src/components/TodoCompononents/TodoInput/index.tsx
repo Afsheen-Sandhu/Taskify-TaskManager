@@ -10,12 +10,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 interface TodoInputProps {
-  addTodo: (todo: string) => void;
+  addTodo: (todo: string, priority?: "low" | "medium" | "high" | null) => void;
   input: string;
   setInput: (input: string) => void;
   editMode?: boolean;
-  priority?: 'low' | 'medium' | 'high' | null;
-  setPriority?: (p: 'low' | 'medium' | 'high' | null) => void;
+  priority?: "low" | "medium" | "high" | null;
+  setPriority?: (p: "low" | "medium" | "high" | null) => void;
 }
 export const TodoInput = ({
   addTodo,
@@ -31,24 +31,28 @@ export const TodoInput = ({
       toast.error("Please set Priority");
       return;
     }
-    // @ts-expect-error: addTodo in parent accepts optional priority; keep back-compat
+
     addTodo(input, priority);
     if (!editMode) {
       setInput("");
       setPriority && setPriority(null);
     }
-    
   };
   return (
     <div className="w-full justify-center flex items-center gap-3 p-4 border-b border-base-200 bg-base-100 relative">
       <Input
-      
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder="Enter your task"
         className="flex w-5xl border-base-200 bg-base-200 text-base-content placeholder-neutral-content "
       />
-      <Select key={priority ?? "unset"} value={priority ?? undefined} onValueChange={(v) => setPriority && setPriority(v as 'low' | 'medium' | 'high')}>
+      <Select
+        key={priority ?? "unset"}
+        value={priority ?? undefined}
+        onValueChange={(v) =>
+          setPriority && setPriority(v as "low" | "medium" | "high")
+        }
+      >
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Set Priority" />
         </SelectTrigger>
