@@ -7,15 +7,15 @@ import React, { useState } from "react";
 import clsx from "clsx";
 
 interface TodoCardProps extends React.ComponentPropsWithoutRef<"li"> {
-  todoIndex: number;
-  deleteTodo: (index: number) => void;
-  editTodo: (index: number) => void;
+  todoId: number;
+  deleteTodo: (id: number) => void;
+  editTodo: (id: number) => void;
   priority?: "low" | "medium" | "high";
 }
 
 export const TodoCard = ({
   children,
-  todoIndex,
+  todoId,
   deleteTodo,
   editTodo,
   priority,
@@ -25,7 +25,7 @@ export const TodoCard = ({
 
   return (
     <li
-      className="flex items-center justify-between px-6 py-4 border border-secondary rounded-md shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out cursor-move"
+      className="flex items-center justify-between px-6 py-4 border border-base-300 rounded-md shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out cursor-move"
       {...props}
     >
       <div className="flex items-center gap-4 ">
@@ -46,7 +46,7 @@ export const TodoCard = ({
       <div className="flex items-center gap-3">
         <Button
           variant="ghost"
-          onClick={() => editTodo(todoIndex)}
+          onClick={() => editTodo(todoId)}
           className="inline-flex h-10 w-10 items-center justify-center rounded-md text-gray-600 hover:text-primary hover:bg-base-200"
         >
           <i className="fa-solid fa-pen-to-square"></i>
@@ -54,7 +54,7 @@ export const TodoCard = ({
         <Button
           variant="ghost"
           className="inline-flex h-10 w-10 items-center justify-center rounded-md text-gray-600 hover:text-error hover:bg-base-200"
-          onClick={() => deleteTodo(todoIndex)}
+          onClick={() => deleteTodo(todoId)}
         >
           <i className="fa-solid fa-trash-can"></i>
         </Button>

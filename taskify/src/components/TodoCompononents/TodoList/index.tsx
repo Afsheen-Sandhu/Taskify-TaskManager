@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React from "react";
 import { TodoCard } from "../TodoCard";
 
 interface TodoListProps {
@@ -8,10 +8,13 @@ interface TodoListProps {
     priority: "low" | "medium" | "high";
     status: string;
   }[];
-  deleteTodo: (index: number) => void;
-  editTodo: (index: number) => void;
-  reorderTodo: (fromIndex: number, toIndex: number) => void;
-  updatePriority: (index: number, newPriority: "low" | "medium" | "high") => void;
+  deleteTodo: (id: number) => void;
+  editTodo: (id: number) => void;
+  reorderTodo: (draggedId: number, dropTargetId: number) => void;
+  updatePriority: (
+    id: number,
+    newPriority: "low" | "medium" | "high"
+  ) => void;
 }
 
 export const TodoList = ({
@@ -21,90 +24,53 @@ export const TodoList = ({
   reorderTodo,
   updatePriority,
 }: TodoListProps) => {
-  const dragItem = useRef<number | null>(null);
-  const dragOverItem = useRef<number | null>(null);
-
   const handleDragStart = (
     e: React.DragEvent<HTMLLIElement>,
-    index: number
+    todoId: number
   ) => {
     e.dataTransfer.dropEffect = "move";
-    dragItem.current = index;
+    e.dataTransfer.setData("todoId", todoId.toString());
   };
 
-  const handleDragEnter = (e: React.DragEvent<HTMLLIElement>, index: number) => {
+  const handleDrop = (
+    e: React.DragEvent<HTMLLIElement>,
+    dropTargetTodoId: number,
+    priority: "low" | "medium" | "high"
+  ) => {
     e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
-    dragOverItem.current = index;
-  };
-
-  const handleDrop = (priority: "low" | "medium" | "high") => {
-    if (
-      dragItem.current !== null &&
-      dragOverItem.current !== null
-    ) {
-      // Update priority if dropped in different section
-      if (todos[dragItem.current].priority !== priority) {
-        updatePriority(dragItem.current, priority);
-      }
-      // Reorder within the section
-      reorderTodo(dragItem.current, dragOverItem.current);
+    const draggedIdStr = e.dataTransfer.getData("todoId");
+    if (draggedIdStr === "") return;
+    const draggedId = parseInt(draggedIdStr, 10);
+    if (isNaN(draggedId)) return;
+    const draggedTodo = todos.find(t => t.id === draggedId);
+    if (draggedTodo && draggedTodo.priority !== priority) {
+      updatePriority(draggedId, priority);
     }
-    dragItem.current = null;
-    dragOverItem.current = null;
-  };
-
-  // Add onDrop handler to section to allow dropping on empty space
-  const handleSectionDrop = (e: React.DragEvent<HTMLUListElement>, priority: "low" | "medium" | "high") => {    e.preventDefault();
-    if (dragItem.current !== null) {
-      if (todos[dragItem.current].priority !== priority) {
-        updatePriority(dragItem.current, priority);
-      }
-      // Move to top of the new section
-      reorderTodo(dragItem.current, 0);
-      dragItem.current = null;
-      dragOverItem.current = null;
-    }
+    reorderTodo(draggedId, dropTargetTodoId);
   };
 
   return (
-    <>
-      {(["high", "medium", "low"] as const).map((priority) => (
-        <section key={priority} className="mb-6 px-2 ">
-          <h2 className="text-lg font-semibold capitalize mb-2">{priority} Priority</h2>
-          <ul
-            className="w-full p-4 space-y-3  rounded-md    "
-            onDrop={(e) => handleSectionDrop(e, priority)}
-            onDragOver={(e) => e.preventDefault()}
-          >
-            {todos
-              .map((todo, index) => ({ todo, index }))
-              .filter(({ todo }) => todo.priority === priority)
-              .map(({ todo, index }) => (
-                <TodoCard
-                  todoIndex={index}
-                  deleteTodo={deleteTodo}
-                  editTodo={editTodo}
-                  priority={todo.priority}
-                  key={todo.id}
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, index)}
-                  onDragEnter={(e) => handleDragEnter(e, index)}
-                  onDragOver={(e) => {
-                    e.preventDefault();
-                    e.dataTransfer.dropEffect = "move";
-                  }}
-                  onDrop={() => handleDrop(priority)}
-                 
-                >
-                  <div className="flex items-center gap-2">
-                    <p className="text-base-content">{todo.title}</p>
-                  </div>
-                </TodoCard>
-              ))}
-          </ul>
-        </section>
+    <ul className="w-full p-4 space-y-3 rounded-md">
+      {todos.map((todo) => (
+        <TodoCard
+          todoId={todo.id}
+          deleteTodo={deleteTodo}
+          editTodo={editTodo}
+          priority={todo.priority}
+          key={todo.id}
+          draggable
+          onDragStart={(e) => handleDragStart(e, todo.id)}
+          onDragOver={(e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = "move";
+          }}
+          onDrop={(e) => handleDrop(e, todo.id, todo.priority)}
+        >
+          <div className="flex items-center gap-2">
+            <p className="text-base-content">{todo.title}</p>
+          </div>
+        </TodoCard>
       ))}
-    </>
+    </ul>
   );
 };

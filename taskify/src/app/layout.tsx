@@ -54,7 +54,7 @@ export default function RootLayout({
         {/* <Sidebar /> */}
         <div className="flex-1 flex flex-col">
           {/* <Topbar /> */}
-          <Todo />
+ 
           {children}
         </div>
         <Toaster position="top-center" />

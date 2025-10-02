@@ -44,7 +44,7 @@ export const TodoInput = ({
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder="Enter your task"
-        className="flex w-5xl border-base-200 bg-base-200 text-base-content placeholder-neutral-content "
+        className="flex  border-base-200 bg-base-200 text-base-content placeholder-neutral-content "
       />
       <Select
         key={priority ?? "unset"}
@@ -63,7 +63,7 @@ export const TodoInput = ({
         </SelectContent>
       </Select>
 
-      <Button size="lg" className="px-10" onClick={handleAddTodo}>
+      <Button size="sm" className="px-10" onClick={handleAddTodo}>
         {editMode ? "Update" : "Add"}
       </Button>
     </div>
