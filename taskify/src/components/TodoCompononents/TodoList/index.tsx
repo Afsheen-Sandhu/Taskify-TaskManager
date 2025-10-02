@@ -55,12 +55,13 @@ export const TodoList = ({
   };
 
   // Add onDrop handler to section to allow dropping on empty space
-  const handleSectionDrop = (e: React.DragEvent<HTMLUListElement>, priority: "low" | "medium" | "high") => {
-    e.preventDefault();
+  const handleSectionDrop = (e: React.DragEvent<HTMLUListElement>, priority: "low" | "medium" | "high") => {    e.preventDefault();
     if (dragItem.current !== null) {
       if (todos[dragItem.current].priority !== priority) {
         updatePriority(dragItem.current, priority);
       }
+      // Move to top of the new section
+      reorderTodo(dragItem.current, 0);
       dragItem.current = null;
       dragOverItem.current = null;
     }
@@ -69,10 +70,10 @@ export const TodoList = ({
   return (
     <>
       {(["high", "medium", "low"] as const).map((priority) => (
-        <section key={priority} className="mb-6">
+        <section key={priority} className="mb-6 px-2 ">
           <h2 className="text-lg font-semibold capitalize mb-2">{priority} Priority</h2>
           <ul
-            className="w-full p-4 space-y-3 bg-base-300 rounded-md border-2 border-primary"
+            className="w-full p-4 space-y-3  rounded-md    "
             onDrop={(e) => handleSectionDrop(e, priority)}
             onDragOver={(e) => e.preventDefault()}
           >
@@ -94,7 +95,7 @@ export const TodoList = ({
                     e.dataTransfer.dropEffect = "move";
                   }}
                   onDrop={() => handleDrop(priority)}
-                  className="cursor-move"
+                 
                 >
                   <div className="flex items-center gap-2">
                     <p className="text-base-content">{todo.title}</p>

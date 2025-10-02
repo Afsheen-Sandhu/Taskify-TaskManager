@@ -97,7 +97,7 @@ export const Todo = () => {
   });
 
   return (
-    <div className="w-full bg-base-300 h-full py-5 ">
+    <div className="w-fulL h-full py-5 ">
       <TodoInput
         addTodo={addTodo}
         input={input}
