@@ -26,7 +26,7 @@ export const KanbanColumn = ({
     updatePriority,
   }: KanbanColumnProps) => (
     <div
-      className="flex-1 p-4 bg-base-100 mt-5 rounded min-h-[300px]"
+      className="flex-1 p-4 bg-base-100 mt-5 rounded min-h-[400px]"
       onDragOver={e => e.preventDefault()}
       onDrop={e => onDropTodo(e, status)}
     >

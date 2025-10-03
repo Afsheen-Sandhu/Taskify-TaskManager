@@ -10,22 +10,24 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+type PriorityType = "low" | "medium" | "high" | null;
+
 interface TodoInputProps {
   addTodo: (
     todo: string,
-    priority?: "low" | "medium" | "high" | null,
+    priority?: PriorityType,
     destination?: string | null
   ) => void;
   input: string;
   setInput: (input: string) => void;
   editMode?: boolean;
-  priority?: "low" | "medium" | "high" | null;
-  setPriority?: (p: "low" | "medium" | "high" | null) => void;
+  priority?: PriorityType;
+  setPriority?: (p: PriorityType) => void;
   destination?: string | null;
   setDestination?: (d: string | null) => void;
 }
 
-const destinations = ["pending", "inprogress", "done"];
+const destinations = ["pending", "in progress", "done"];
 
 export const TodoInput = ({
   addTodo,
@@ -65,10 +67,9 @@ export const TodoInput = ({
         className="flex  border-base-200 bg-base-200 text-base-content placeholder-neutral-content "
       />
       <Select
+        key={priority}
         value={priority ?? undefined}
-        onValueChange={(v) =>
-          setPriority && setPriority(v as "low" | "medium" | "high")
-        }
+        onValueChange={(v) => setPriority?.(v as "low" | "medium" | "high")}
       >
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Set Priority" />
@@ -80,7 +81,7 @@ export const TodoInput = ({
         </SelectContent>
       </Select>
       <Select
-        key={destination ?? "unset"}
+        key={destination}
         value={destination ?? undefined}
         onValueChange={(v) => setDestination && setDestination(v)}
       >
@@ -89,8 +90,8 @@ export const TodoInput = ({
         </SelectTrigger>
         <SelectContent>
           {destinations.map((dest) => (
-            <SelectItem key={dest} value={dest}>
-              {dest.charAt(0).toUpperCase() + dest.slice(1)}
+            <SelectItem key={dest} value={dest} className="capitalize">
+              {dest}
             </SelectItem>
           ))}
         </SelectContent>

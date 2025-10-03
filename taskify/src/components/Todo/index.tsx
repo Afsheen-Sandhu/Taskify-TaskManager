@@ -3,6 +3,10 @@ import React, { useState } from "react";
 import { TodoInput } from "../TodoCompononents";
 import { KanbanColumn } from "../TodoCompononents/KanbanColumn";
 
+
+type PriorityType = "low" | "medium" | "high" | null;
+
+
 interface Todo {
   id: number;
   title: string;
@@ -21,7 +25,7 @@ export const Todo = () => {
   );
   const [destination, setDestination] = useState<string | null>(null);
 
-  const statuses = ["pending", "inprogress", "done"];
+  const statuses = ["pending", "in progress", "done"];
 
   const addTodo = (
     todo: string,
