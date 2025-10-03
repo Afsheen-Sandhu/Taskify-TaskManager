@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
-import Sidebar from "@/components/Sidebar";
-import Topbar from "@/components/Topbar";
-import {Todo} from "@/components/Todo";
+// import Sidebar from "@/components/Sidebar";
+// import Topbar from "@/components/Topbar";
+// import {Todo} from "@/components/Todo";
 import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({

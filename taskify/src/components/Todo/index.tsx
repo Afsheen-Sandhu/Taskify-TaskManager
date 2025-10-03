@@ -19,29 +19,33 @@ export const Todo = () => {
 
   const LOCAL_STORAGE_KEY = "taskify.todos";
 
+  const isTodoLike = (value: unknown): value is TodoType => {
+    if (!value || typeof value !== "object") return false;
+    const candidate = value as Record<string, unknown>;
+    return (
+      typeof candidate.id === "number" &&
+      typeof candidate.title === "string" &&
+      (candidate.priority === "low" || candidate.priority === "medium" || candidate.priority === "high") &&
+      (candidate.status === "pending" || candidate.status === "in progress" || candidate.status === "done")
+    );
+  };
+
   useEffect(() => {
     try {
       const raw = typeof window !== "undefined" ? localStorage.getItem(LOCAL_STORAGE_KEY) : null;
       if (!raw) return;
       const parsed: unknown = JSON.parse(raw);
       if (Array.isArray(parsed)) {
-        // Basic shape validation
-        const validTodos = parsed.filter((t: any) =>
-          t && typeof t.id === "number" && typeof t.title === "string" &&
-          (t.priority === "low" || t.priority === "medium" || t.priority === "high") &&
-          (t.status === "pending" || t.status === "in progress" || t.status === "done")
-        );
+        const validTodos = parsed.filter(isTodoLike);
         setTodos(validTodos as TodoType[]);
       }
-    } catch (_) {
-    }
+    } catch {}
   }, []);
   useEffect(() => {
     try {
       if (typeof window === "undefined") return;
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(todos));
-    } catch (_) {
-    }
+    } catch {}
   }, [todos]);
 
   const addTodo = (
