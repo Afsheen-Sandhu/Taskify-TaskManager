@@ -1,43 +1,60 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TodoInput } from "../TodoCompononents";
 import { KanbanColumn } from "../TodoCompononents/KanbanColumn";
-
-
-type PriorityType = "low" | "medium" | "high" | null;
-
-
-interface Todo {
-  id: number;
-  title: string;
-  priority: "low" | "medium" | "high";
-  status: string;
-}
+import type { Priority, Status, Todo as TodoType } from "@/types/todo";
 
 export const Todo = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todos, setTodos] = useState<TodoType[]>([]);
   const [input, setInput] = useState("");
-  const [editTodo, setEditTodo] = useState<Todo | null>(null);
+  const [editTodo, setEditTodo] = useState<TodoType | null>(null);
   const [editMode, setEditMode] = useState(false);
   const [editTodoIndex, setEditTodoIndex] = useState<number | null>(null);
-  const [priority, setPriority] = useState<"low" | "medium" | "high" | null>(
+  const [priority, setPriority] = useState<Priority | null>(
     null
   );
-  const [destination, setDestination] = useState<string | null>(null);
+  const [destination, setDestination] = useState<Status | null>(null);
 
-  const statuses = ["pending", "in progress", "done"];
+  const statuses: Status[] = ["pending", "in progress", "done"];
+
+  const LOCAL_STORAGE_KEY = "taskify.todos";
+
+  useEffect(() => {
+    try {
+      const raw = typeof window !== "undefined" ? localStorage.getItem(LOCAL_STORAGE_KEY) : null;
+      if (!raw) return;
+      const parsed: unknown = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        // Basic shape validation
+        const validTodos = parsed.filter((t: any) =>
+          t && typeof t.id === "number" && typeof t.title === "string" &&
+          (t.priority === "low" || t.priority === "medium" || t.priority === "high") &&
+          (t.status === "pending" || t.status === "in progress" || t.status === "done")
+        );
+        setTodos(validTodos as TodoType[]);
+      }
+    } catch (_) {
+    }
+  }, []);
+  useEffect(() => {
+    try {
+      if (typeof window === "undefined") return;
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(todos));
+    } catch (_) {
+    }
+  }, [todos]);
 
   const addTodo = (
     todo: string,
-    priority?: "low" | "medium" | "high" | "null" | null,
-    destinationParam?: string | null
+    priority?: Priority | null,
+    destinationParam?: Status | null
   ) => {
     if (editMode && editTodoIndex !== null) {
       const updatedTodos = [...todos];
       updatedTodos[editTodoIndex] = {
         ...updatedTodos[editTodoIndex],
         title: todo,
-        priority: (priority as "low" | "medium" | "high") ?? updatedTodos[editTodoIndex].priority,
+        priority: (priority as Priority) ?? updatedTodos[editTodoIndex].priority,
         status: destinationParam ?? updatedTodos[editTodoIndex].status,
       };
       setTodos(updatedTodos);
@@ -48,11 +65,11 @@ export const Todo = () => {
       setEditTodoIndex(null);
       setInput("");
     } else {
-      const newTodo: Todo = {
+      const newTodo: TodoType = {
         id: Date.now(),
         title: todo,
-        priority: (priority as "low" | "medium" | "high") ?? "low",
-        status: destinationParam ?? "pending",
+        priority: (priority as Priority) ?? "low",
+        status: (destinationParam as Status) ?? "pending",
       };
       setTodos([...todos, newTodo]);
       setInput("");
@@ -72,7 +89,7 @@ export const Todo = () => {
     setEditTodoIndex(todoIndex);
     setEditMode(true);
     setInput(todos[todoIndex]?.title ?? "");
-    setPriority((todos[todoIndex] as Todo)?.priority ?? null);
+    setPriority((todos[todoIndex] as TodoType)?.priority ?? null);
     setDestination(todos[todoIndex]?.status ?? null);
   };
 
@@ -90,7 +107,7 @@ export const Todo = () => {
 
   const updatePriority = (
     todoId: number,
-    newPriority: "low" | "medium" | "high"
+    newPriority: Priority
   ) => {
     setTodos((prev) => {
       const updated = [...prev];
@@ -103,7 +120,7 @@ export const Todo = () => {
 
   const handleDropTodo = (
     e: React.DragEvent<HTMLDivElement>,
-    newStatus: string
+    newStatus: Status
   ) => {
     e.preventDefault();
     const draggedId = parseInt(e.dataTransfer.getData("todoId"), 10);
@@ -117,7 +134,7 @@ export const Todo = () => {
     });
   };
 
-  const getSortedTodosByStatus = (status: string) => {
+  const getSortedTodosByStatus = (status: Status) => {
     const priorityOrder = { high: 3, medium: 2, low: 1 };
     return todos
       .filter((todo) => todo.status === status)

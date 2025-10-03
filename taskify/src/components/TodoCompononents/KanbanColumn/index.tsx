@@ -1,19 +1,20 @@
 import React from "react";
 import { TodoList } from "../TodoList";
+import type { Priority, Status } from "@/types/todo";
 
 interface KanbanColumnProps {
-  status: string;
+  status: Status;
   todos: {
     id: number;
     title: string;
-    priority: "low" | "medium" | "high";
-    status: string;
+    priority: Priority;
+    status: Status;
   }[];
-  onDropTodo: (e: React.DragEvent<HTMLDivElement>, status: string) => void;
+  onDropTodo: (e: React.DragEvent<HTMLDivElement>, status: Status) => void;
   deleteTodo: (index: number) => void;
   editTodo: (index: number) => void;
   reorderTodo: (fromIndex: number, toIndex: number) => void;
-  updatePriority: (index: number, newPriority: "low" | "medium" | "high") => void;
+  updatePriority: (index: number, newPriority: Priority) => void;
 }
 
 export const KanbanColumn = ({

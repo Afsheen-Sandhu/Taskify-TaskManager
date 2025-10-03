@@ -10,24 +10,25 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-type PriorityType = "low" | "medium" | "high" | null;
+import type { Priority, Status } from "@/types/todo";
+type PriorityType = Priority | null;
 
 interface TodoInputProps {
   addTodo: (
     todo: string,
     priority?: PriorityType,
-    destination?: string | null
+    destination?: Status | null
   ) => void;
   input: string;
   setInput: (input: string) => void;
   editMode?: boolean;
   priority?: PriorityType;
   setPriority?: (p: PriorityType) => void;
-  destination?: string | null;
-  setDestination?: (d: string | null) => void;
+  destination?: Status | null;
+  setDestination?: (d: Status | null) => void;
 }
 
-const destinations = ["pending", "in progress", "done"];
+const destinations: Status[] = ["pending", "in progress", "done"];
 
 export const TodoInput = ({
   addTodo,
@@ -69,7 +70,7 @@ export const TodoInput = ({
       <Select
         key={priority ?? ""}
         value={priority ?? undefined}
-        onValueChange={(v) => setPriority?.(v as "low" | "medium" | "high")}
+        onValueChange={(v) => setPriority?.(v as Priority)}
       >
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Set Priority" />
@@ -83,7 +84,7 @@ export const TodoInput = ({
       <Select
         key={destination}
         value={destination ?? undefined}
-        onValueChange={(v) => setDestination && setDestination(v)}
+        onValueChange={(v) => setDestination && setDestination(v as Status)}
       >
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Select Destination" />

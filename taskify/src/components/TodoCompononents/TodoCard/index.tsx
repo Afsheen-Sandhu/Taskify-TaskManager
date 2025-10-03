@@ -5,12 +5,13 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import React, { useState } from "react";
 import clsx from "clsx";
+import type { Priority } from "@/types/todo";
 
 interface TodoCardProps extends React.ComponentPropsWithoutRef<"li"> {
   todoId: number;
   deleteTodo: (id: number) => void;
   editTodo: (id: number) => void;
-  priority?: "low" | "medium" | "high";
+  priority?: Priority;
 }
 
 export const TodoCard = ({

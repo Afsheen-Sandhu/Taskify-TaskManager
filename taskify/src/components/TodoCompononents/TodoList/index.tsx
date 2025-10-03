@@ -1,11 +1,12 @@
 import React from "react";
 import { TodoCard } from "../TodoCard";
+import type { Priority } from "@/types/todo";
 
 interface TodoListProps {
   todos: {
     id: number;
     title: string;
-    priority: "low" | "medium" | "high";
+    priority: Priority;
     status: string;
   }[];
   deleteTodo: (id: number) => void;
@@ -13,7 +14,7 @@ interface TodoListProps {
   reorderTodo: (draggedId: number, dropTargetId: number) => void;
   updatePriority: (
     id: number,
-    newPriority: "low" | "medium" | "high"
+    newPriority: Priority
   ) => void;
    
   
@@ -37,7 +38,7 @@ export const TodoList = ({
   const handleDrop = (
     e: React.DragEvent<HTMLLIElement>,
     dropTargetTodoId: number,
-    priority: "low" | "medium" | "high"
+    priority: Priority
   ) => {
     e.preventDefault();
     const draggedIdStr = e.dataTransfer.getData("todoId");
