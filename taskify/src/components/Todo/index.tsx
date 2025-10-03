@@ -19,16 +19,14 @@ export const Todo = () => {
   const [priority, setPriority] = useState<"low" | "medium" | "high" | null>(
     null
   );
-  const priorityLevels: ("low" | "medium" | "high")[] = [
-    "low",
-    "medium",
-    "high",
-  ];
+  const [destination, setDestination] = useState<string | null>(null);
+
   const statuses = ["pending", "inprogress", "done"];
 
   const addTodo = (
     todo: string,
-    priority?: "low" | "medium" | "high" | "null" | null
+    priority?: "low" | "medium" | "high" | "null" | null,
+    destinationParam?: string | null
   ) => {
     if (editMode && editTodoIndex !== null) {
       const updatedTodos = [...todos];
@@ -36,9 +34,11 @@ export const Todo = () => {
         ...updatedTodos[editTodoIndex],
         title: todo,
         priority: (priority as "low" | "medium" | "high") ?? updatedTodos[editTodoIndex].priority,
+        status: destinationParam ?? updatedTodos[editTodoIndex].status,
       };
       setTodos(updatedTodos);
       setPriority(null);
+      setDestination(null);
       setEditMode(false);
       setEditTodo(null);
       setEditTodoIndex(null);
@@ -48,11 +48,12 @@ export const Todo = () => {
         id: Date.now(),
         title: todo,
         priority: (priority as "low" | "medium" | "high") ?? "low",
-        status: "pending",
+        status: destinationParam ?? "pending",
       };
       setTodos([...todos, newTodo]);
       setInput("");
       setPriority(null);
+      setDestination(null);
     }
   };
 
@@ -68,6 +69,7 @@ export const Todo = () => {
     setEditMode(true);
     setInput(todos[todoIndex]?.title ?? "");
     setPriority((todos[todoIndex] as Todo)?.priority ?? null);
+    setDestination(todos[todoIndex]?.status ?? null);
   };
 
   const reorderTodo = (draggedId: number, dropTargetId: number) => {
@@ -127,6 +129,8 @@ export const Todo = () => {
         editMode={editMode}
         priority={priority}
         setPriority={setPriority}
+        destination={destination}
+        setDestination={setDestination}
       />
       <div className="flex gap-4 w-full">
         {statuses.map((status) => (

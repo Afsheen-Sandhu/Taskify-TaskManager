@@ -25,7 +25,7 @@ export const TodoCard = ({
 
   return (
     <li
-      className="flex items-center justify-between px-6 py-4 border border-base-300 rounded-md shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out cursor-move"
+      className="flex items-center justify-between px-6 py-4 border border-base-300 bg-base-300 rounded-md shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out cursor-move"
       {...props}
     >
       <div className="flex items-center gap-4 ">

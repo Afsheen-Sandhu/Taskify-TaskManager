@@ -15,6 +15,8 @@ interface TodoListProps {
     id: number,
     newPriority: "low" | "medium" | "high"
   ) => void;
+   
+  
 }
 
 export const TodoList = ({
