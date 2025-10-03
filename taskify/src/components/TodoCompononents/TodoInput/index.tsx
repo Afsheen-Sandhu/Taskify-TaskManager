@@ -54,8 +54,8 @@ export const TodoInput = ({
     addTodo(input, priority, destination);
     if (!editMode) {
       setInput("");
-      setPriority && setPriority(null);
-      setDestination && setDestination(null);
+      setPriority?.(null);
+      setDestination?.(null);
     }
   };
 
