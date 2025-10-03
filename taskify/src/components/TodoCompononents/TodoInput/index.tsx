@@ -67,7 +67,7 @@ export const TodoInput = ({
         className="flex  border-base-200 bg-base-200 text-base-content placeholder-neutral-content "
       />
       <Select
-        key={priority}
+        key={priority ?? ""}
         value={priority ?? undefined}
         onValueChange={(v) => setPriority?.(v as "low" | "medium" | "high")}
       >
